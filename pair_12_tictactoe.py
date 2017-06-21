@@ -3,6 +3,12 @@ import sys
 import datetime
 
 
+class color:
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    END = '\033[0m'
+
+
 def print_table():
     print("\n")
     print("  " + table[7] + "  |  " + table[8] + "  |  " + table[9] + "  ")
@@ -18,11 +24,11 @@ def win():
     global name2_score
     if counter % 2 != 0:
         print(name1 + " won!")
-        name1_score+=1
+        name1_score += 1
         want_to_play_again()
     else:
         print(name2 + " won!")
-        name2_score+=1
+        name2_score += 1
         want_to_play_again()
 
 
@@ -56,8 +62,15 @@ def cell_is_empty(cell_num):
 
 
 def want_to_play_again():
-    more = input("Want to play again? (y/n)")
-    more = more.upper()
+    while True:
+        try:
+            more = input("Want to play again? (y/n)")
+            more = more.upper()
+            assert more == "Y" or more == "N"
+        except Exception:
+            print("Please choose between 'y' or 'n'.")
+        else:
+            break
     if more == "Y":
         global table
         table.clear()
@@ -65,35 +78,46 @@ def want_to_play_again():
         print_table()
         global counter
         counter += 1
-    else:
+    elif more == "N":
         with open("scores.txt", "a") as scores:
             scores.write(str(datetime.datetime.now().date())+"\n")
             scores.write("{}: {}\n".format(name1, name1_score))
             scores.write("{}: {}\n".format(name2, name2_score))
             scores.write("++++++++++++++++++++++"+"\n")
-        sys.exit()
+            sys.exit()
 
 
 table = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-print_table()
 counter = 0
 name1_score = 0
 name2_score = 0
 
-name1 = input("Name (player X): ")
-name2 = input("Name (player O): ")
+print("""
+
+- For this game, two players are required.
+- Decide who starts.
+- The first player starts with "X".
+- After the first round, you can either continue or stop.
+- The loser starts next round.
+- After a finished game, scores can be reviewed in the "scores.txt" file.
+""")
+
+print_table()
+
+name1 = input("First player, enter your name: ")
+name2 = input("Second player, enter your name:")
 
 more = "y"
 
 while more == "y":
     checkwin()
     if counter % 2 != 0:
-        char = "X"
+        char = color.BLUE + "X" + color.END
         name = name1
     else:
-        char = "O"
+        char = color.GREEN + "O" + color.END
         name = name2
-    num = input("It's your turn, " + name + ". Enter a number according to the table above: ")
+    num = input("\nIt's your turn, " + name + ". Enter a number according to the table above: ")
     if len(num) != 1 or (not num.isdigit()):
         print("Please choose from 1-9.")
         counter -= 1
