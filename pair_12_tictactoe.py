@@ -1,5 +1,6 @@
 
 import sys
+import datetime
 
 
 def print_table():
@@ -13,11 +14,15 @@ def print_table():
 
 
 def win():
+    global name1_score
+    global name2_score
     if counter % 2 != 0:
         print(name1 + " won!")
+        name1_score+=1
         want_to_play_again()
     else:
         print(name2 + " won!")
+        name2_score+=1
         want_to_play_again()
 
 
@@ -61,12 +66,19 @@ def want_to_play_again():
         global counter
         counter += 1
     else:
+        with open("scores.txt", "a") as scores:
+            scores.write(str(datetime.datetime.now().date())+"\n")
+            scores.write("{}: {}\n".format(name1, name1_score))
+            scores.write("{}: {}\n".format(name2, name2_score))
+            scores.write("++++++++++++++++++++++"+"\n")
         sys.exit()
 
 
 table = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 print_table()
 counter = 0
+name1_score = 0
+name2_score = 0
 
 name1 = input("Name (player X): ")
 name2 = input("Name (player O): ")
