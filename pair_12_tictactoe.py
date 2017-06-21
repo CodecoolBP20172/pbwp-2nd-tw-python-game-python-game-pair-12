@@ -15,15 +15,15 @@ def print_table():
 def win():
     if counter % 2 != 0:
         print(name1 + " won!")
-        sys.exit()
+        want_to_play_again()
     else:
         print(name2 + " won!")
-        sys.exit()
+        want_to_play_again()
 
 
 def draw():
     print("Tie!")
-    sys.exit()
+    want_to_play_again()
 
 
 def checkwin():
@@ -50,7 +50,18 @@ def cell_is_empty(cell_num):
     return table[cell_num] == str(cell_num)
 
 
-#def name_input(name):
+def want_to_play_again():
+    more = input("Want to play again? (y/n)")
+    more = more.upper()
+    if more == "Y":
+        global table
+        table.clear()
+        table = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        print_table()
+        global counter
+        counter += 1
+    else:
+        sys.exit()
 
 
 table = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
@@ -60,7 +71,9 @@ counter = 0
 name1 = input("Name (player X): ")
 name2 = input("Name (player O): ")
 
-while True:
+more = "y"
+
+while more == "y":
     checkwin()
     if counter % 2 != 0:
         char = "X"
