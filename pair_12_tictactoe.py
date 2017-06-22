@@ -19,6 +19,27 @@ def print_table():
     print("\n")
 
 
+def checkwin():
+    if (table[1] == table[2] and table[2] == table[3]) or \
+        (table[4] == table[5] and table[5] == table[6]) or \
+        (table[7] == table[8] and table[8] == table[9]) or \
+        (table[1] == table[4] and table[4] == table[7]) or \
+        (table[2] == table[5] and table[5] == table[8]) or \
+        (table[3] == table[6] and table[6] == table[9]) or \
+        (table[1] == table[5] and table[5] == table[9]) or \
+            (table[3] == table[5] and table[5] == table[7]):
+        win()
+    elif any(element.isdigit() for element in table) is False:
+        draw()
+    else:
+        global counter
+        counter += 1
+
+
+def print_current_score():
+    print("{}: {} - {}: {}".format(name1, name1_score, name2, name2_score))
+
+
 def win():
     global name1_score
     global name2_score
@@ -37,28 +58,12 @@ def draw():
     want_to_play_again()
 
 
-def checkwin():
-    if (table[1] == table[2] and table[2] == table[3]) or \
-        (table[4] == table[5] and table[5] == table[6]) or \
-        (table[7] == table[8] and table[8] == table[9]) or \
-        (table[1] == table[4] and table[4] == table[7]) or \
-        (table[2] == table[5] and table[5] == table[8]) or \
-        (table[3] == table[6] and table[6] == table[9]) or \
-        (table[1] == table[5] and table[5] == table[9]) or \
-            (table[3] == table[5] and table[5] == table[7]):
-        win()
-    elif any(element.isdigit() for element in table) is False:
-        draw()
-    else:
-        global counter
-        counter += 1
-
-
 def cell_is_empty(cell_num):
     return table[cell_num] == str(cell_num)
 
 
 def want_to_play_again():
+    print_current_score()
     while True:
         try:
             more = input("Want to play again? (y/n)")
@@ -70,7 +75,6 @@ def want_to_play_again():
             break
     if more == "Y":
         global table
-        table.clear()
         table = ["X", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         print_table()
         global counter
@@ -80,7 +84,7 @@ def want_to_play_again():
             scores.write(str(datetime.datetime.now().date())+"\n")
             scores.write("{}: {}\n".format(name1, name1_score))
             scores.write("{}: {}\n".format(name2, name2_score))
-            scores.write("++++++++++++++++++++++"+"\n")
+            scores.write("◡◠◡◠◡◠◡◠◡"+"\n")
             sys.exit()
 
 
@@ -105,6 +109,7 @@ def start_game():
 def game_play():
     global counter
     counter = 0
+    more = "y"
     while more == "y":
         checkwin()
         if counter % 2 != 0:
@@ -127,11 +132,9 @@ def game_play():
 
 def main():
     global table
-    global more
     global name1_score
     global name2_score
     table = ["X", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    more = "y"
     name1_score = 0
     name2_score = 0
     start_game()
