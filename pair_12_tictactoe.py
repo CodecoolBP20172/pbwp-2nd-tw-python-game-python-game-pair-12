@@ -38,7 +38,6 @@ def draw():
 
 
 def checkwin():
-    global game
     if (table[1] == table[2] and table[2] == table[3]) or \
         (table[4] == table[5] and table[5] == table[6]) or \
         (table[7] == table[8] and table[8] == table[9]) or \
@@ -48,9 +47,7 @@ def checkwin():
         (table[1] == table[5] and table[5] == table[9]) or \
             (table[3] == table[5] and table[5] == table[7]):
         win()
-    elif (table[1].isalpha() and table[2].isalpha() and table[3].isalpha()
-          and table[4].isalpha() and table[5].isalpha() and table[6].isalpha()
-          and table[7].isalpha() and table[8].isalpha() and table[9].isalpha()):
+    elif any(element.isdigit() for element in table) is False:
         draw()
     else:
         global counter
@@ -74,7 +71,7 @@ def want_to_play_again():
     if more == "Y":
         global table
         table.clear()
-        table = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        table = ["X", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         print_table()
         global counter
         counter += 1
@@ -87,43 +84,59 @@ def want_to_play_again():
             sys.exit()
 
 
-table = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-counter = 0
-name1_score = 0
-name2_score = 0
+def start_game():
+    print("""
 
-print("""
+    - For this game, two players are required.
+    - Decide who starts.
+    - The first player starts with "X".
+    - After the first round, you can either continue or stop.
+    - The loser starts next round.
+    - After a finished game, scores can be reviewed in the "scores.txt" file.
+    """)
 
-- For this game, two players are required.
-- Decide who starts.
-- The first player starts with "X".
-- After the first round, you can either continue or stop.
-- The loser starts next round.
-- After a finished game, scores can be reviewed in the "scores.txt" file.
-""")
+    print_table()
+    global name1
+    global name2
+    name1 = input("First player, enter your name: ")
+    name2 = input("Second player, enter your name: ")
 
-print_table()
 
-name1 = input("First player, enter your name: ")
-name2 = input("Second player, enter your name:")
+def game_play():
+    global counter
+    counter = 0
+    while more == "y":
+        checkwin()
+        if counter % 2 != 0:
+            char = color.BLUE + "X" + color.END
+            name = name1
+        else:
+            char = color.GREEN + "O" + color.END
+            name = name2
+        num = input("\nIt's your turn, " + name + ". Enter a number according to the table above: ")
+        if len(num) != 1 or (not num.isdigit()):
+            print("Please choose from 1-9.")
+            counter -= 1
+        elif cell_is_empty(int(num)):
+            table[int(num)] = char
+            print_table()
+        else:
+            print("This block is not empty.")
+            counter -= 1
 
-more = "y"
 
-while more == "y":
-    checkwin()
-    if counter % 2 != 0:
-        char = color.BLUE + "X" + color.END
-        name = name1
-    else:
-        char = color.GREEN + "O" + color.END
-        name = name2
-    num = input("\nIt's your turn, " + name + ". Enter a number according to the table above: ")
-    if len(num) != 1 or (not num.isdigit()):
-        print("Please choose from 1-9.")
-        counter -= 1
-    elif cell_is_empty(int(num)):
-        table[int(num)] = char
-        print_table()
-    else:
-        print("This block is not empty.")
-        counter -= 1
+def main():
+    global table
+    global more
+    global name1_score
+    global name2_score
+    table = ["X", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    more = "y"
+    name1_score = 0
+    name2_score = 0
+    start_game()
+    game_play()
+
+
+if __name__ == "__main__":
+    main()
