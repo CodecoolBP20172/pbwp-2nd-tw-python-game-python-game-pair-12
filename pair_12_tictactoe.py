@@ -4,12 +4,14 @@ import datetime
 
 
 class color:
+    """Adds color to the X and O symbol"""
     BLUE = '\033[94m'
     GREEN = '\033[92m'
     END = '\033[0m'
 
 
 def print_table():
+    """Prints out the game field"""
     print("\n")
     print("  " + table[7] + "  |  " + table[8] + "  |  " + table[9] + "  ")
     print("-----------------")
@@ -20,6 +22,7 @@ def print_table():
 
 
 def checkwin():
+    """Checks if there is a winning position or draw"""
     if (table[1] == table[2] and table[2] == table[3]) or \
         (table[4] == table[5] and table[5] == table[6]) or \
         (table[7] == table[8] and table[8] == table[9]) or \
@@ -37,6 +40,7 @@ def checkwin():
 
 
 def print_current_score():
+    """Prints out the score, called after a finished round"""
     print("{}: {} - {}: {}".format(name1, name1_score, name2, name2_score))
 
 
@@ -59,10 +63,14 @@ def draw():
 
 
 def cell_is_empty(cell_num):
+    """Checks if a cell is empty or not"""
     return table[cell_num] == str(cell_num)
 
 
 def want_to_play_again():
+    """Asking if the players want another round or not.
+    If so, it resets the table.
+    If not, it exports the scores to a txt file and exits."""
     print_current_score()
     while True:
         try:
@@ -89,8 +97,8 @@ def want_to_play_again():
 
 
 def start_game():
+    """Prints out game rules and the table, and asks for the players' names."""
     print("""
-
     - For this game, two players are required.
     - Decide who starts.
     - The first player starts with "X".
@@ -98,7 +106,6 @@ def start_game():
     - The loser starts next round.
     - After a finished game, scores can be reviewed in the "scores.txt" file.
     """)
-
     print_table()
     global name1
     global name2
@@ -107,6 +114,8 @@ def start_game():
 
 
 def game_play():
+    """Changes the numbers to the signs on the table,
+    handles exceptions (wrong input)."""
     global counter
     counter = 0
     more = "y"
